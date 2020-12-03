@@ -26,6 +26,5 @@ jobs:
 
       # Runs the Super-Linter action
       - name: Run compile
-        run:
-          - sudo apt-get install libxml2-utils
+        run: sudo apt-get install libxml2-utils
           - cd ipxe && make
