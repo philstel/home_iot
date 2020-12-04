@@ -26,12 +26,12 @@ jobs:
           name: ipxe.efi
           path: ipxe/src/bin-x86_64-efi/ipxe.efi
       - name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-        name: latest123
-        files: ipxe.efi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
+        with:
+          name: latest123
+          files: ipxe.efi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   transpile-container-linux-config:
     name: Transpile Config
     runs-on: ubuntu-latest
