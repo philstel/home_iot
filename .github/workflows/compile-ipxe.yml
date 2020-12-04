@@ -24,7 +24,7 @@ jobs:
       - name: Archive ipxe binary
         uses: actions/upload-artifact@v2
         with:
-          name: ipxe
+          name: ipxe.efi
           path: ipxe/src/bin-x86_64-efi/ipxe.efi
   transpile-container-linux-config:
     name: Transpile Config
@@ -32,12 +32,19 @@ jobs:
     steps:
       - name: Transpile container linux config
         run: |
-          curl -o ct https://github.com/coreos/container-linux-config-transpiler/releases/download/v0.9.0/ct-v0.9.0-x86_64-unknown-linux-gnu
           chmod +x ct
           cat container-linux-config.yaml | ./ct > ignition.config
       - name: Archive ignition config
         uses: actions/upload-artifact@v2
         with:
-          name: ignition
+          name: ignition.config
           path: ignition.config
-
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: latest123
+          files: |
+            ignition.config
+            ipxe.efi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
