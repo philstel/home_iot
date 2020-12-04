@@ -26,5 +26,7 @@ jobs:
 
       # Runs the Super-Linter action
       - name: Run compile
-        run: sudo apt-get install libxml2-utils
-          - cd ipxe && make
+        run: |
+          sudo apt-get install libxml2-utils
+          cd ipxe/src
+          make bin-x86_64-efi/ipxe.efi EMBED=../../boot.ipxe

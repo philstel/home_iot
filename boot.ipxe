@@ -1,6 +1,7 @@
 #!ipxe
 dhcp
 
-kernel flatcar.vmlinuz initrd=flatcar.cpio.gz flatcar.first_boot=1 ignition.config.url=https://raw.githubusercontent.com/philstel/home_iot/master/ignition.config
-initrd flatcar.cpio.gz
+set base-url http://beta.release.flatcar-linux.net/amd64-usr/current
+kernel ${base-url}/flatcar_production_pxe.vmlinuz initrd=flatcar_production_pxe_image.cpio.gz flatcar.first_boot=1 ignition.config.url=https://raw.githubusercontent.com/philstel/home_iot/master/ignition.config
+initrd ${base-url}/flatcar_production_pxe_image.cpio.gz
 boot
