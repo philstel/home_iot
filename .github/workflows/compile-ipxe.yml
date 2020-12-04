@@ -22,15 +22,25 @@ jobs:
           repository: 'ipxe/ipxe'
           path: 'ipxe'
           fetch-depth: 0
-
-      # Runs the Super-Linter action
       - name: Run compile
         run: |
           sudo apt-get install libxml2-utils
           cd ipxe/src
           make bin-x86_64-efi/ipxe.efi EMBED=../../boot.ipxe
       - name: Archive ipxe binary
-          uses: actions/upload-artifact@v2
-          with:
-            name: ipxe
-            path: ipxe/src/bin-x86_64-efi/ipxe.efi
+        uses: actions/upload-artifact@v2
+        with:
+          name: ipxe
+          path: ipxe/src/bin-x86_64-efi/ipxe.efi
+      - name: Transpile container linux config
+        run: |
+          curl -o ct https://github.com/coreos/container-linux-config-transpiler/releases/download/v0.9.0/ct-v0.9.0-x86_64-unknown-linux-gnu
+          chmod +x ct
+          ls
+          cat container-linux-config.yaml | ct > ignition.config
+      - name: Archive ignition config
+        uses: actions/upload-artifact@v2
+        with:
+          name: ignition
+          path: ignition.config
+
