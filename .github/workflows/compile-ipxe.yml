@@ -7,7 +7,6 @@ jobs:
     name: Compile iPXE
     runs-on: ubuntu-latest
     steps:
-      # Checks out a copy of your repository on the ubuntu-latest machine
       - name: Checkout this repo
         uses: actions/checkout@v2
       - name: Checkout ipxe repo
@@ -26,10 +25,19 @@ jobs:
         with:
           name: ipxe.efi
           path: ipxe/src/bin-x86_64-efi/ipxe.efi
+      - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: latest123
+        files: ipxe.efi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   transpile-container-linux-config:
     name: Transpile Config
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v2
       - name: Transpile container linux config
         run: |
           chmod +x ct
@@ -43,8 +51,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: latest123
-          files: |
-            ignition.config
-            ipxe.efi
+          files: ignition.config
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
