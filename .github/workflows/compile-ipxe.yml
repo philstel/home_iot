@@ -19,10 +19,9 @@ jobs:
       - name: Checkout ipxe repo
         uses: actions/checkout@v2
         with:
-          # Repository name with owner. For example, actions/checkout
-          # Default: ${{ github.repository }}
           repository: 'ipxe/ipxe'
           path: 'ipxe'
+          fetch-depth: 0
 
       # Runs the Super-Linter action
       - name: Run compile
@@ -30,3 +29,8 @@ jobs:
           sudo apt-get install libxml2-utils
           cd ipxe/src
           make bin-x86_64-efi/ipxe.efi EMBED=../../boot.ipxe
+      - name: Archive ipxe binary
+          uses: actions/upload-artifact@v2
+          with:
+            name: ipxe
+            path: ipxe/src/bin-x86_64-efi/ipxe.efi
