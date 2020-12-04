@@ -54,10 +54,11 @@ jobs:
         with:
           name: ignition.config
           path: ignition.config
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: latest123
-          files: ignition.config
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy Files
+        run: |
+          git config user.name ${{ secrets.GH_USER }}
+          git config user.email "${{ secrets.GH_MAIL }}"
+          git remote add github "https://${{ secrets.GH_TOKEN}}@github.com/:user/:repo.git"
+          git add ignition.config
+          git commit -m "Updated ignition.config"
+          git push github
