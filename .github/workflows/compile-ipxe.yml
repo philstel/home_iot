@@ -33,6 +33,7 @@ jobs:
           path: ipxe/src/bin-x86_64-efi/ipxe.efi
       - name: Deploy Files
         run: |
+          mv ipxe/src/bin-x86_64-efi/ipxe.efi ipxe.efi
           git config user.name "buildbot"
           git config user.email "buildbot@github.com"
           git add ipxe.efi
