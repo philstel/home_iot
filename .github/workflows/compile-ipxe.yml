@@ -1,6 +1,12 @@
 name: build
 
-on: push
+on:
+  push:
+    paths:
+      - 'boot.ipxe'
+      - 'container-linux-config.yaml'
+    branches:
+      - master
 
 jobs:
   compile-ipxe:
@@ -25,13 +31,14 @@ jobs:
         with:
           name: ipxe.efi
           path: ipxe/src/bin-x86_64-efi/ipxe.efi
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: latest123
-          files: ipxe.efi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy Files
+        run: |
+          git config user.name ${{ secrets.GH_USER }}
+          git config user.email "${{ secrets.GH_MAIL }}"
+          git remote add github "https://${{ secrets.GH_TOKEN}}@github.com/:user/:repo.git"
+          git add ipxe.efi
+          git commit -m "Updated ipxe.efi"
+          git push github
   transpile-container-linux-config:
     name: Transpile Config
     runs-on: ubuntu-latest
