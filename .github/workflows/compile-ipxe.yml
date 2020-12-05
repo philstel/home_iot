@@ -59,10 +59,14 @@ jobs:
         uses: actions/checkout@v2
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v2
+        path: artifacts
       - name: Commit and Push files
         run: |
+          ls -lah artifacts
+          mv artifacts/ignition.config/ignition.config ignition.config
+          mv artifacts/ipxe.efi/ipxe.efi ipxe.efi
           git config user.name "buildbot"
           git config user.email "buildbot@github.com"
-          git add -A
+          git add ipxe.efi ignition.config
           git diff-index --quiet HEAD || git commit -m "Updated ignition.config and/or ipxe.efi"
           git push
