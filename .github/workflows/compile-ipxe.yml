@@ -31,14 +31,7 @@ jobs:
         with:
           name: ipxe.efi
           path: ipxe/src/bin-x86_64-efi/ipxe.efi
-      - name: Deploy Files
-        run: |
-          mv ipxe/src/bin-x86_64-efi/ipxe.efi ipxe.efi
-          git config user.name "buildbot"
-          git config user.email "buildbot@github.com"
-          git add ipxe.efi
-          git commit -m "Updated ipxe.efi"
-          git push
+          retention-days: 1
   transpile-container-linux-config:
     name: Transpile Config
     runs-on: ubuntu-latest
@@ -54,10 +47,19 @@ jobs:
         with:
           name: ignition.config
           path: ignition.config
-      - name: Deploy Files
+          retention-days: 1
+  upload-artifacts:
+    name: Commit artifacts to repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v2
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
+      - name: Commit and Push files
         run: |
           git config user.name "buildbot"
           git config user.email "buildbot@github.com"
-          git add ignition.config
-          git commit -m "Updated ignition.config"
+          git add -A
+          git diff-index --quiet HEAD || git commit -m "Updated ignition.config and/or ipxe.efi"
           git push
