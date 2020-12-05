@@ -63,11 +63,11 @@ jobs:
           path: artifacts
       - name: Commit and Push files
         run: |
-          ls -lah artifacts
-          mv artifacts/ignition.config/ignition.config ignition.config
-          mv artifacts/ipxe.efi/ipxe.efi ipxe.efi
+          mkdir -p generated
+          mv artifacts/ignition.config/ignition.config generated/ignition.config
+          mv artifacts/ipxe.efi/ipxe.efi generated/ipxe.efi
           git config user.name "buildbot"
           git config user.email "buildbot@github.com"
-          git add ipxe.efi ignition.config
+          git add generated/ipxe.efi generated/ignition.config
           git diff-index --quiet HEAD || git commit -m "Updated ignition.config and/or ipxe.efi"
           git push
