@@ -3,7 +3,6 @@ passwd:
     - name: phillu
       groups:
         - sudo
-        - wheel
         - docker
       ssh_authorized_keys:
         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwNQsxVfRSOHE1qoJ9qEyh0T/7he/RIZXarPWwa6+gswyBjkxqeJlvicnwfFnbByoraB4LnPr3FfCpV97N7wJsr4m2jO3T/XJOaMWw7bKaa6V0apVIAQ2Nd6aBuqRox91I4xvlP1hrIS8IpzQJpyyJaWwVRl93KMJfjugo2G8Y+xjvjaGGA/mGAdJUSf+cVI2AXm2uSj0BWjjbSivh19zIW8ORXEcTprckXrcJT8N6MhownMQ/dOFdxAOLruIzR+uutcEtQK535jd2E4SE26xFr2jJem0E7eY8h0Y7vhyoo9IwCXr6P0lVRzFhSA4wHuWk25/BLvJn3241udqJ4P1J 17:38:92:f2:92:60:dd:41:3e:57:c8:87:64:51:84:99 id_rsa
