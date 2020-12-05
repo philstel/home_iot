@@ -50,6 +50,9 @@ jobs:
           retention-days: 1
   upload-artifacts:
     name: Commit artifacts to repository
+    needs:
+      - transpile-container-linux-config
+      - compile-ipxe
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
