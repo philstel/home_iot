@@ -88,10 +88,16 @@ storage:
                 - /opt/secrets.env
               environment:
                 BACKUP_INTERVAL: 5m
+              healthcheck:
+                test: bash -c "[ -f /watch ]"
+                timeout: 30s
               volumes:
                 - s3data:/data
             unms:
               image: nico640/docker-unms:1.2.7
+              depends_on:
+                s3vol:
+                  condition: service_healthy
               ports:
                 - "8443:443"
                 - "8080:80"
