@@ -105,4 +105,4 @@ storage:
               environment:
                 TZ: Europe/Berlin
               volumes:
-                - s3data:/data
+                - s3data:/config
