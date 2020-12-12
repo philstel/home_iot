@@ -19,12 +19,18 @@ storage:
         wipe_filesystem: true
         label: ROOT
   files:
-    - filesystem: ROOT
+    - filesystem: root
       path: /opt/secrets.env
       mode: 0755
       contents:
         remote:
           url: tftp://10.0.5.1/env
+    - filesystem: root
+      path: /home/phillu/.docker/config.json
+      mode: 0755
+      contents:
+        remote:
+          url: tftp://10.0.5.1/docker.config.json
 systemd:
   units:
     - name: unms.service
