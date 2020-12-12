@@ -100,7 +100,3 @@ storage:
                 TZ: Europe/Berlin
               volumes:
                 - s3data:/data
-systemd:
-  units:
-    - name: dc@unms
-      enabled: true
