@@ -18,3 +18,29 @@ storage:
         format: ext4
         wipe_filesystem: true
         label: ROOT
+  files:
+    - filesystem: ROOT
+      path: /opt/secrets.env
+      mode: 0755
+      contents:
+        remote:
+          url: tftp://10.0.5.1/env
+systemd:
+  units:
+    - name: unms.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=unms
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=-/usr/bin/docker kill unms
+        ExecStartPre=-/usr/bin/docker rm unms
+        ExecStartPre=/usr/bin/docker pull nico640/docker-unms:latest
+        ExecStart=/usr/bin/docker run --name unms -p 8080:80 -p 8443:443 -p 2055:2055/udp -e TZ=Europe/Berlin nico640/docker-unms:latest
+
+        [Install]
+        WantedBy=multi-user.target
