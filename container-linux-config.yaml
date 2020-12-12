@@ -33,7 +33,7 @@ storage:
           url: tftp://10.0.5.1/docker.config.json
     # Docker Compose
     - filesystem: root
-      path: /usr/local/bin/docker-compose
+      path: /opt/bin/docker-compose
       mode: 0777
       contents:
         remote:
