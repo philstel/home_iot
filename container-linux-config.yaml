@@ -31,22 +31,76 @@ storage:
       contents:
         remote:
           url: tftp://10.0.5.1/docker.config.json
+    # Docker Compose
+    - filesystem: root
+      path: /usr/local/bin/docker-compose
+      mode: 0777
+      contents:
+        remote:
+          url: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-x86_64
+    # Docker compose template for services
+    - filesystem: root
+      path: /etc/systemd/system/dc@.service
+      mode: 0777
+      contents:
+        inline: |
+          [Unit]
+          Description=%i service with docker compose
+          Requires=docker.service
+          After=docker.service
+
+          [Service]
+          Restart=always
+          TimeoutStartSec=1200
+
+          WorkingDirectory=/opt/dockerfiles/%i
+
+          # Remove old containers, images and volumes and update it
+          ExecStartPre=/usr/local/bin/docker-compose down -v
+          ExecStartPre=/usr/local/bin/docker-compose rm -fv
+          ExecStartPre=/usr/local/bin/docker-compose pull
+
+          # Compose up
+          ExecStart=/usr/local/bin/docker-compose up
+
+          # Compose down, remove containers and volumes
+          ExecStop=/usr/local/bin/docker-compose down -v
+
+          [Install]
+          WantedBy=multi-user.target
+    # UNMS
+    - filesystem: root
+      path: /opt/dockerfiles/unms/docker-compose.yml
+      mode: 0777
+      contents:
+        inline: |
+          version: "3.9"
+
+          volumes:
+            s3data:
+              driver: local
+
+          services:
+            s3vol:
+              image: elementar/s3-volume
+              command: /data s3://home-server-docker-data-store/unms
+              env_file:
+                - /opt/secrets.env
+              environment:
+                BACKUP_INTERVAL: 5m
+              volumes:
+                - s3data:/data
+            unms:
+              image: nico640/docker-unms:1.2.7
+              ports:
+                - "8443:443"
+                - "8080:80"
+                - "2055:2055/udp"
+              environment:
+                TZ: Europe/Berlin
+              volumes:
+                - s3data:/data
 systemd:
   units:
-    - name: unms.service
+    - name: dc@unms
       enabled: true
-      contents: |
-        [Unit]
-        Description=unms
-        After=docker.service
-        Requires=docker.service
-
-        [Service]
-        TimeoutStartSec=0
-        ExecStartPre=-/usr/bin/docker kill unms
-        ExecStartPre=-/usr/bin/docker rm unms
-        ExecStartPre=/usr/bin/docker pull nico640/docker-unms:latest
-        ExecStart=/usr/bin/docker run --name unms -p 8080:80 -p 8443:443 -p 2055:2055/udp -e TZ=Europe/Berlin nico640/docker-unms:latest
-
-        [Install]
-        WantedBy=multi-user.target
