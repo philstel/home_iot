@@ -83,7 +83,19 @@ storage:
           services:
             s3vol:
               image: elementar/s3-volume
-              command: /data s3://home-server-docker-data-store/unms
+              command: /data/unms/unms-backups s3://home-server-docker-data-store/unms/unms-backups
+              env_file:
+                - /opt/secrets.env
+              environment:
+                BACKUP_INTERVAL: 5m
+              healthcheck:
+                test: bash -c "[ -f /watch ]"
+                timeout: 30s
+              volumes:
+                - s3data:/data
+            s3vol2:
+              image: elementar/s3-volume
+              command: /data/unms/config-backups s3://home-server-docker-data-store/unms/config-backups
               env_file:
                 - /opt/secrets.env
               environment:
@@ -98,6 +110,8 @@ storage:
               depends_on:
                 s3vol:
                   condition: service_healthy
+                s3vol2:
+                  condition: service_healthy
               ports:
                 - "8443:443"
                 - "8080:80"
@@ -105,4 +119,4 @@ storage:
               environment:
                 TZ: Europe/Berlin
               volumes:
-                - s3data:/config/unms
+                - s3data:/config
